@@ -1,0 +1,17 @@
+{
+  "name": "gulp-workflow",
+  "version": "0.0.1",
+  "description": "gulp workflow",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.6.2",
+    "gulp-uglify": "~0.2.1",
+    "gulp-minify-css": "~0.3.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alon Zhang",
+  "license": "ISC"
+}
