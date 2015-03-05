@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>APICloud Framework</title>
+        <style type="text/css">
+            .ancestor{
+                border: 1px solid #ccc;
+                padding: 2em;
+            }
+            #oneEvt{
+                position: absolute; left:300px; top:50px;
+            }
+            .wrap{
+                position: relative; height:100px; border:1px solid #ccc
+            }
+        </style>
+        <script type="text/javascript" src="../api.js"></script>
+        <script type="text/javascript" src="zepto.min.js"></script>
+        <script type="text/javascript">
+            window.onload = function(){
+                var child = $api.dom('#childNode');
+                var ancestor = $api.closest(child, '.aaaaa');
+                console.log(ancestor)
+
+                var oneEvt = $api.dom('#oneEvt');
+                $api.one(oneEvt, 'click', function(){
+                    alert('首次点击弹出消息！再点试试~');
+                });
+            };
+        </script>
+    </head>
+    <body>
+        <div class="ancestor">
+            祖先节点
+            <div class="child2" attr="child2">
+                <div class="child2"></div>
+                <div class="child2" id="child2">
+                    父级节点
+                    <div class="child1">
+                        <div class="child1">aaaaa</div>
+                        <div class="child1" id="child1">
+                            <div class="child3">子节点</div>
+                            <div class="child3" id="childNode">子节点</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input id="chk" type="checkbox" /><label for="chk">复选框</label>
+        <input id="input" type="text" />
+        <textarea id="txtarea"></textarea>
+        <select name="" id="select">
+            <option value="">111</option>
+            <option value="">222</option>
+            <option value="">333</option>
+        </select>
+        <ul id="list">
+            <li class="item">item1</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+        </ul>
+        <div class="wrap">
+            <button id="oneEvt">只能点一次</button>
+        </div>
+    </body>
+</html>
