@@ -503,6 +503,7 @@
             u.fixIos7Bar(el);
         }else if(sysType == 'android'){
             var ver = api.systemVersion;
+            ver = parseFloat(ver);
             if(ver >= 4.4){
                 el.style.paddingTop = '25px';
             }
