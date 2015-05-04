@@ -71,10 +71,11 @@ td,th {
 	width: 100%;
 }
 .loading_more:before {
-	background-image: url(../image/loading_more.gif) 30% center;
-	background-repeat: no-repeat;
+	display: inline-block; vertical-align: text-bottom;
+	content: ' '; height: 16px; width: 16px; margin-right: 6px;
+	background: url(../image/loading_more.gif) no-repeat center;
+	-webkit-background-size: contain;
 	background-size: contain;
-	text-align: center;
 } 
 .loading_more:after {
 	content: '加载更多';	
