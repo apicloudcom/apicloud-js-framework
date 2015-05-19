@@ -12,7 +12,7 @@ gulp.task('jsLibMin', function() {
     .pipe(gulp.dest('release/widget/lib'));
 });
 gulp.task('jsmin', ['copy','jsLibMin'], function() {
-    gulp.src('dev/api.js')
+    gulp.src('dev/api*.js')
     .pipe(uglify({outSourceMap: false}))
     .pipe(gulp.dest('release'));
 });
