@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1, width=device-width">
+<style>
+    body,div,h1,h2,h3,h4,h5,h6{
+        margin:0;padding: 0;
+    }
+    body{
+        background-color: black;
+        color: white;
+    }
+    #main{
+        display: -webkit-box;
+        -webkit-box-orient:vertical;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    header{
+        position: relative;
+        display: -webkit-box;
+        -webkit-box-pack:center;
+        -webkit-box-align:center;
+        height: 44px;
+        background:-webkit-gradient(linear, left top, left bottom, from(#444), to(#111));
+    }
+    #back{
+        position: absolute;
+        bottom: 6px;
+        left: 1em;
+        padding: .3em .8em;
+        background:-webkit-gradient(linear, left top, left bottom, from(#666), to(#333));
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+    #title{
+    }
+    #photos{
+        display: -webkit-box;
+        -webkit-box-flex:1;
+        -webkit-box-orient:horizontal;
+        -webkit-box-align:center;
+    }
+    .container{
+        display: -webkit-box;
+        -webkit-box-align:center;
+        -webkit-box-pack:center;
+        width: 100%;
+        height: 100%;
+    }
+    .getUrl{
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        font-size: 1.2em;
+    }
+    .container img{
+        display: -webkit-box;
+        max-width: 98%;
+        max-height: 98%;
+    }
+    footer{
+        display: -webkit-box;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 4em;
+    }
+    #brief{
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+</style>
+</head>
+<body ontouchstart>
+    <div id="main">
+        <header>
+            <a id="back" tapmode="active" onclick="closePage()">返回</a>
+            <h3 id="title">图片浏览</h3>
+            <!--<a id="down" tapmode="active" onclick="down()"></a>-->
+        </header>
+        <section id="photos" tapmode="active" onclick="hideAndShow()">
+            <div class="getUrl">正在获取中…</div>
+        </section>
+        <footer>
+            <pre id="brief"></pre>
+        </footer>
+    </div>
+</body>
+<script src="../lib/carousel.js"></script>
+<script>
+//公用方法
+var $byId = function(id){
+    return document.getElementById(id);
+};
+var $html = function(el,str){
+    if (str) {
+        el.innerHTML = str;
+    }else{
+        return el.innerHTML;
+    };
+};
+var $attr = function(el,name,value){
+    if(arguments.length == 2){
+        return el.getAttribute(name);
+    }else if(arguments.length == 3){
+        el.setAttribute(name, value);
+        return el;
+    }
+};
+var getData = function(url){//请求数据，要求方式get，返回数据为字符串：'[{url:'',title:''},{},{}]'
+    api.ajax({
+        url: url,
+        method: 'get',
+        cache: false,
+        timeout: 30,
+        dataType: 'text'
+    }, function(ret, err){
+        if (ret) {
+            var ajaxArr = eval(''+ret+'');
+            setPhotos(ajaxArr);
+        }else {
+            api.alert(
+                {
+                    msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                }
+            );
+        };
+    });
+}
+//公用方法end
+var hAndS = false;
+var brief = $byId('brief'),
+    photos = $byId('photos'),
+    title = '',
+    iNow = 0,
+    len = 0,
+    titleArr = [];
+function closePage(){
+    alert('调用关闭窗口函数');
+    // api.closeWin();
+}
+function hideAndShow(){//显示/隐藏信息
+    if (hAndS) {
+        brief.style.display = 'none';
+        hAndS = false;
+    } else{
+        brief.style.display = 'block';
+        hAndS = true;
+    };
+}
+function setBrief(arr){//打印信息
+    $html(brief,(iNow+1)+'/'+len+title+'\n\n'+titleArr[iNow]);
+}
+function getPhotos(arr){//数组+json：[{url:'sss',title:'titie'},{url:'sss',title:'titie'}]
+    if (arr&&(arr instanceof Array)) {
+        var arr = arr;
+        var arrT = arr[0];
+        if (arrT.title) {
+            title = arrT.title;
+        };
+        if (arrT.url) {
+            getData(url);
+        } else{
+            arr.splice(0,1);
+            var arrB = arr;
+        };
+        setPhotos(arrB);
+    } else{
+        return;
+    };
+}
+function setPhotos(arr){//创建DOM元素
+    if (!arr) {
+        return;
+    };
+    var str ='';
+    len = arr.length;
+    for (var n = 0; n < len; n++) {
+        str += '<div class="container"><img src="'+arr[n].url+'" alt="'+arr[n].title+'"></div>';
+        titleArr.push(arr[n].title);
+    };
+    $html(photos,str);
+    setBrief();
+}
+
+
+//测试用的内容
+function test(){
+    var arr = [{title:'测试用的主标题'},{url:'img/1.jpg',title:'足球一'},{url:'img/2.jpg',title:'足球二'},{url:'img/3.jpg',title:'足球三'},{url:'img/4.jpg',title:'足球四'}];
+    getPhotos(arr);
+}//end
+window.onload = function(){
+    
+    test();//测试
+    var rollTimer = null;
+    photos.slide = new Slider(
+        photos,
+        {
+            dir: 'x',
+            touchStartFn: function(){
+                if (rollTimer) {
+                    clearInterval(rollTimer);
+                };
+            },
+            touchEndFn: function(){
+                roll(this);//调用自动播放
+                if (this.direction < 0 && iNow == 0) {
+                    closePage();
+                    //第一张图片向右拉，关闭页面
+                };
+                
+            },
+            transEndFn: function(){
+                iNow = this.currentPoint;              
+                setBrief();
+                if (!this.hasNext()) {
+                    this.currentPoint = -1;
+                };      
+            },
+            duration: 300
+        }
+    );
+
+    var roll = function(s){//自动播放函数
+        rollTimer = setInterval(
+            function(){
+                s.toNext();      
+            }
+        ,3000);
+    };
+    roll(photos.slide);
+};
+</script>
+</html>

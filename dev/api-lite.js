@@ -1,5 +1,5 @@
 /*
- * APP3C JavaScript Library
+ * APICloud JavaScript Library
  * Copyright (c) 2014 apicloud.com
  */
 (function(window){
@@ -121,6 +121,22 @@
             var iOS7StatusBarAppearance = api.iOS7StatusBarAppearance;
             if (numSV >= 7 && !fullScreen && iOS7StatusBarAppearance) {
                 el.style.paddingTop = '20px';
+            }
+        }
+    };
+    u.fixStatusBar = function(el){
+        if(!u.isElement(el)){
+            console.warn('$api.fixStatusBar Function need el param, el param must be DOM Element');
+            return;
+        }
+        var sysType = api.systemType;
+        if(sysType == 'ios'){
+            u.fixIos7Bar(el);
+        }else if(sysType == 'android'){
+            var ver = api.systemVersion;
+            ver = parseFloat(ver);
+            if(ver >= 4.4){
+                el.style.paddingTop = '25px';
             }
         }
     };
