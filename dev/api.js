@@ -175,7 +175,7 @@
         var isSame = function(doms, el){
             var i = 0, len = doms.length;
             for(i; i<len; i++){
-                if(doms[i].isEqualNode(el)){
+                if(doms[i].isSameNode(el)){
                     return doms[i];
                 }
             }

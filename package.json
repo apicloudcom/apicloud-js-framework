@@ -5,9 +5,9 @@
   "main": "app.js",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "~3.6.2",
     "gulp-uglify": "~0.2.1",
-    "gulp-minify-css": "~0.3.7"
+    "gulp-minify-css": "~0.3.7",
+    "gulp": "^3.9.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
