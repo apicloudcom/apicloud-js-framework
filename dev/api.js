@@ -152,8 +152,8 @@
         var node = el.previousSibling;
         if(node.nodeType && node.nodeType === 3){
             node = node.previousSibling;
-            return node;
         }
+        return node;
     };
     u.next = function(el){
         if(!u.isElement(el)){
@@ -163,8 +163,8 @@
         var node = el.nextSibling;
         if(node.nodeType && node.nodeType === 3){
             node = node.nextSibling;
-            return node;
         }
+        return node;
     };
     u.closest = function(el, selector){
         if(!u.isElement(el)){
