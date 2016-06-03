@@ -16,19 +16,20 @@
                 position: relative; height:100px; border:1px solid #ccc
             }
         </style>
-        <script type="text/javascript" src="../api.js"></script>
-        <script type="text/javascript" src="zepto.min.js"></script>
+        <!-- <script type="text/javascript" src="../api.js"></script> -->
+        <script type="text/javascript" src="../api-2.0.js"></script>
+        <script type="text/javascript" src="zepto.js"></script>
         <script type="text/javascript">
-            window.onload = function(){
-                var child = $api.dom('#childNode');
-                var ancestor = $api.closest(child, '.aaaaa');
-                console.log(ancestor)
+            // window.onload = function(){
+            //     var child = $api.dom('#childNode');
+            //     var ancestor = $api.closest(child, '.aaaaa');
+            //     console.log(ancestor)
 
-                var oneEvt = $api.dom('#oneEvt');
-                $api.one(oneEvt, 'click', function(){
-                    alert('首次点击弹出消息！再点试试~');
-                });
-            };
+            //     var oneEvt = $api.dom('#oneEvt');
+            //     $api.one(oneEvt, 'click', function(){
+            //         alert('首次点击弹出消息！再点试试~');
+            //     });
+            // };
         </script>
     </head>
     <body>
@@ -52,9 +53,9 @@
         <input id="input" type="text" />
         <textarea id="txtarea"></textarea>
         <select name="" id="select">
-            <option value="">111</option>
-            <option value="">222</option>
-            <option value="">333</option>
+            <option value="aaa">111</option>
+            <option value="bbb">222</option>
+            <option value="ccc">333</option>
         </select>
         <ul id="list">
             <li class="item">item1</li>
@@ -63,8 +64,93 @@
             <li>item4</li>
             <li>item5</li>
         </ul>
+        <button id="rmClick">移除点击事件</button>
+        <button id="triggerClick">触发item1的点击事件</button>
+        <button id="rmNode">点击移除item1元素</button>
         <div class="wrap">
             <button id="oneEvt">只能点一次</button>
         </div>
     </body>
+    <script type="text/javascript">
+        //global method
+        //
+        //
+        var list = $api('#list')[0];
+        console.log($api.contains(document.body, list))
+
+        //test example
+        //
+        //
+        var clickFn = function(){
+            alert(222)
+        };
+
+        //on, off
+        var $thisItem = $api('#list li.item');
+        $thisItem.on('click', clickFn);
+        $('#rmClick').on('click', function(e){
+            // alert(e.target.innerText);
+
+            $thisItem.off('click', clickFn);
+            alert('移除item1点击事件')
+        });
+
+        //one
+        $api('#oneEvt').one('click', function(){
+            alert('首次点击弹出消息！再点试试~');
+        });
+
+        //trigger
+        $api('#triggerClick').on('click', function(){
+            $thisItem.trigger('click');
+        })
+
+        //DOM 选择器
+        //
+        //
+        console.info('--------------DOM Selector--------------')
+
+        //#id, .class 等所有合法的 CSS 选择器
+        console.log($api('#list'));
+        console.log($api('.ancestor'));
+        //first
+        console.log($api('#list li:first-child'));
+        //last
+        console.log($api('#list li:last-child'));
+
+        //eq
+        //nth-child 的索引从1开始
+        $api('#list li:nth-child(4)').on('click', function(){
+            alert('通过选择器选择第四个')
+        });
+        //eq 的索引从0开始，跟Zepto等保持一致
+        $api('#list li').eq(3).on('click', function(){
+            alert('点击了第四个')
+        })
+
+        //not
+        console.log($api('#list li:not(.item)'))
+
+        //转换为 DOM 对象
+        console.log($api('#list')[0])
+
+        //DOM 操作
+        //
+        //
+        console.info('--------------DOM 操作--------------')
+
+        //prev
+        console.log($api('#list').prev())
+        //next
+        console.log($api('#list').next())
+
+        //closest
+        console.log($api('#childNode').closest('.child3'));
+
+        //remove
+        $api('#rmNode').on('click', function(){
+            $api('#list .item').remove();
+        });
+
+    </script>
 </html>
