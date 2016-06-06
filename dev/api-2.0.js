@@ -183,11 +183,8 @@
         }
     };
     /*by king*/
-    $.fixIos7Bar = function(el){
-        if(!$.isElement(el)){
-            console.warn('$api.fixIos7Bar Function need el param, el param must be DOM Element');
-            return;
-        }
+    $.fixIos7Bar = function(selector){
+        var el = $(selector)[0];
         var strDM = api.systemType;
         if (strDM == 'ios') {
             var strSV = api.systemVersion;
@@ -199,11 +196,8 @@
             }
         }
     };
-    $.fixStatusBar = function(el){
-        if(!$.isElement(el)){
-            console.warn('$api.fixStatusBar Function need el param, el param must be DOM Element');
-            return;
-        }
+    $.fixStatusBar = function(selector){
+        var el = $(selector)[0];
         var sysType = api.systemType;
         if(sysType == 'ios'){
             $.fixIos7Bar(el);
@@ -310,7 +304,7 @@
         eq: function(index){
             index = parseInt(index);
             var len = this.length;
-            if(index > 0 && index < len){
+            if(index >= 0 && index < len){
                 return new API([this[index]]);
             }else{
                 return new API([]);
@@ -407,7 +401,7 @@
         addClass: function(className){
             var cls = className.split(' ');
             for(var i = 0, iLen = cls.length; i < iLen; i++){
-                for(var j = 0, jLen = this.length; i < jLen; j++){
+                for(var j = 0, jLen = this.length; j < jLen; j++){
                     this[j].classList.add(cls[i]);
                 }
             }
@@ -416,7 +410,7 @@
         removeClass: function(className){
             var cls = className.split(' ');
             for(var i = 0, iLen = cls.length; i < iLen; i++){
-                for(var j = 0, jLen = this.length; i < jLen; j++){
+                for(var j = 0, jLen = this.length; j < jLen; j++){
                     this[j].classList.remove(cls[i]);
                 }
             }
@@ -425,7 +419,7 @@
         toggleClass: function(className){
             var cls = className.split(' ');
             for(var i = 0, iLen = cls.length; i < iLen; i++){
-                for(var j = 0, jLen = this.length; i < jLen; j++){
+                for(var j = 0, jLen = this.length; j < jLen; j++){
                     this[j].classList.toggle(cls[i]);
                 }
             }
@@ -490,7 +484,7 @@
             }
             return this;
         },
-        before: function(){
+        before: function(el){
             var html;
             if($.isElement(el)){
                 html = el.outerHTML;
@@ -502,7 +496,7 @@
             }
             return this;
         },
-        after: function(){
+        after: function(el){
             var html;
             if($.isElement(el)){
                 html = el.outerHTML;
@@ -516,26 +510,26 @@
         },
         html: function(html){
             if(html){
-                //get
-                return this[0].innerHTML;
-            }else{
                 //set
                 for(var i = 0, len = this.length; i<len; i++){
                     this[i].innerHTML = html;
                 }
                 return this;
+            }else{
+                //get
+                return this[0].innerHTML;
             }
         },
         text: function(text){
             if(text){
-                //get
-                return this[0].textContent;
-            }else{
                 //set
                 for(var i = 0, len = this.length; i<len; i++){
                     this[i].textContent = text;
                 }
                 return this;
+            }else{
+                //get
+                return this[0].textContent;
             }
         },
         offset: function(){

@@ -57,6 +57,11 @@
             <option value="bbb">222</option>
             <option value="ccc">333</option>
         </select>
+        
+        <div>
+            <button id="setval">设置值</button><button id="getval">获取值</button>
+        </div>
+
         <ul id="list">
             <li class="item">item1</li>
             <li>item2</li>
@@ -70,22 +75,131 @@
         <div class="wrap">
             <button id="oneEvt">只能点一次</button>
         </div>
+
+        <br>
+        <br>
+        <br>
+        
+        <style type="text/css">
+            #attr-test.red{color: red;}
+            #attr-test.bold{font-weight: bold;}
+        </style>
+        <div id="attr-test" class="active">Attr 属性</div>
+        <button id="rm-attr">移除属性</button>
+        <div>
+            <button id="addclass">添加class</button><button id="rmclass">移除class</button><button id="tgclass">切换class</button>
+        </div>
+        
+        <br>
+        <br>
+        <br>
+
+        <div id="p-el">
+            <span>父元素</span>
+            <div id="c-el">
+                <span>子元素</span>
+            </div>
+        </div>
+        <div id="changedom">
+            <button>prepend</button>
+            <button>append</button>
+            <button>before</button>
+            <button>after</button>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+        <div id="content-test" style="color: #000;">默认文本默认文本默认文本<em>默认文本</em></div>
+        <button id="settext">设置文本</button><button id="setstyle">设置样式</button>
+
+        <a id="fixedbtn" style="position: fixed; bottom: 40px; right: 40px; border: 1px solid #ccc; padding: 10px; background-color: #fff;" href="javascript:;">返回顶部</a>
+
     </body>
     <script type="text/javascript">
-        //global method
-        //
-        //
-        var list = $api('#list')[0];
-        console.log($api.contains(document.body, list))
 
-        //test example
+        //公共方法
         //
         //
+        //
+        console.log('$api.trim----', $api.trim('  abc  '));
+
+        console.log('$api.isElement----', $api.isElement(document.body));
+
+        console.log('$api.isArray----', $api.isArray([1,2,3]));
+
+        console.log('$api.isEmptyObject----', $api.isEmptyObject({a: 123}));
+
+        var list = $api('#list')[0];
+        console.log('$api.contains----', $api.contains(document.body, list))
+
+        //操作 localStorage
+        $api.setStorage('ls', {a: 123, b: 456});
+        console.log('localStorage---', $api.getStorage('ls'));
+        // $api.rmStorage('ls');
+        // $api.clearStorage();
+
+        //兼容 iOS, Android 状态栏
+        // $api.fixIos7Bar('.header');
+        // $api.fixStatusBar('.ancestor');
+
+        //AJAX
+        // $api.post('http://192.168.1.233:4321/getString',{
+        //     body: 'String'
+        // },function(ret){
+        //     alert(ret);
+        // },'text');
+
+        // $api.get('http://www.pm25.in/api/querys/pm2_5.json?city=beijing&token=5j1znBVAsnSf5xQyNQyq',function(ret){
+        //     alert(ret);
+        // },'text');
+
+        
+        //DOM 选择器
+        //
+        //
+        //
+        console.info('--------------DOM Selector--------------')
+
+        //创建DOM元素
+        console.log('create DOM----', $api('<div>new DOM</div>'))
+
+        //#id, .class 等所有合法的 CSS 选择器
+        console.log('CSS Selector----', $api('#list'));
+        console.log('CSS Selector----', $api('.ancestor'));
+        //第一个元素
+        console.log('first element----', $api('#list li:first-child'));
+        //最后一个元素
+        console.log('last element----', $api('#list li:last-child'));
+        //排除元素
+        console.log('Element not----', $api('#list li:not(.item)'))
+
+        //支持上下文检索
+        console.log('DOM context----', $api('.ancestor', document.body))
+        console.log('Selector context----', $api('li', '#list'))
+
+        //选择DOM元素
+        console.log('DOM Element----', $api(document.body));
+        //选择$api实例
+        var $list = $api('#list');
+        console.log('$api Instance----', $api($list));
+
+        //转换为 DOM 对象
+        console.log('DOM element----', $api('#list')[0])
+
+
+        //实例方法
+        //
+        //
+        //
+
+        //处理事件
         var clickFn = function(){
             alert(222)
         };
 
-        //on, off
+        //监听、移除事件
         var $thisItem = $api('#list li.item');
         $thisItem.on('click', clickFn);
         $('#rmClick').on('click', function(e){
@@ -95,30 +209,25 @@
             alert('移除item1点击事件')
         });
 
-        //one
+        //一次性事件
         $api('#oneEvt').one('click', function(){
             alert('首次点击弹出消息！再点试试~');
         });
 
-        //trigger
+        //触发事件
         $api('#triggerClick').on('click', function(){
             $thisItem.trigger('click');
         })
 
-        //DOM 选择器
+
+
+        //DOM 操作
         //
         //
-        console.info('--------------DOM Selector--------------')
+        //
+        console.info('--------------DOM 操作--------------')
 
-        //#id, .class 等所有合法的 CSS 选择器
-        console.log($api('#list'));
-        console.log($api('.ancestor'));
-        //first
-        console.log($api('#list li:first-child'));
-        //last
-        console.log($api('#list li:last-child'));
-
-        //eq
+        //第几个元素
         //nth-child 的索引从1开始
         $api('#list li:nth-child(4)').on('click', function(){
             alert('通过选择器选择第四个')
@@ -128,29 +237,107 @@
             alert('点击了第四个')
         })
 
-        //not
-        console.log($api('#list li:not(.item)'))
+        //前一个元素
+        console.log('prev element----', $api('#list').prev())
+        $api('#list').prev().prev().on('change', function(){
+            alert(this.value);
+        });
 
-        //转换为 DOM 对象
-        console.log($api('#list')[0])
+        //后一个元素
+        console.log('next element----', $api('#list').next())
 
-        //DOM 操作
-        //
-        //
-        console.info('--------------DOM 操作--------------')
+        //距离最近的父元素
+        console.log('closest element----', $api('#childNode').closest('.child3'));
 
-        //prev
-        console.log($api('#list').prev())
-        //next
-        console.log($api('#list').next())
-
-        //closest
-        console.log($api('#childNode').closest('.child3'));
-
-        //remove
+        //移除元素
         $api('#rmNode').on('click', function(){
             $api('#list .item').remove();
         });
 
+        
+        var $attrTest = $api('#attr-test');
+        //设置属性
+        $attrTest.attr('name', '345');
+        //获取属性
+        console.log('attr----', $attrTest.attr('name'));
+        $api('#rm-attr').on('click', function(){
+            //移除属性
+            $attrTest.removeAttr('name');
+        });
+
+
+        //包含某个class
+        console.log('hasClass---', $attrTest.hasClass('active'));
+        //添加class
+        $api('#addclass').on('click', function(){
+            //添加多个class，用空格分隔
+            $attrTest.addClass('red bold');
+        });
+        //移除class
+        $api('#rmclass').on('click', function(){
+            $attrTest.removeClass('red');
+        });
+        //切换class
+        $api('#tgclass').on('click', function(){
+            $attrTest.toggleClass('red');
+        });
+
+
+        $api('#setval').on('click', function(){
+            //设置值
+            $api('#select').val('设置了一个值');
+        });
+        $api('#getval').on('click', function(){
+            //获取值
+            alert($api('#select').val());
+        });
+
+
+        var $parentEl = $api('#p-el'), $chlidEl = $api('#c-el');
+        //内部前插入
+        $api('#changedom button').eq(0).on('click', function(){
+            $parentEl.prepend('<h1>prepend content</h1>')
+        })
+        //内部后插入
+        $api('#changedom button').eq(1).on('click', function(){
+            //支持DOM元素
+            var attrTest = document.getElementById('attr-test');
+            $parentEl.append(attrTest);
+        })
+        //前插入
+        $api('#changedom button').eq(2).on('click', function(){
+            $chlidEl.before('<h1>before content</h1>')
+        })
+        //后插入
+        $api('#changedom button').eq(3).on('click', function(){
+            var attrTest = document.getElementById('rm-attr');
+            $chlidEl.after(attrTest)
+        })
+
+
+        //设置html
+        $api('#content-test').html('<h2>设置html设置html</h2>')
+        //获取html
+        console.log('get html----', $api('#content-test').html());
+        
+        $api('#settext').on('click', function(){
+            //设置文本
+            $api('#content-test').text('设置了一些文本设置了一些文本');
+            //获取文本
+            console.log('get text----', $api('#content-test').text());
+        })
+        
+        //offset
+        console.log('offset----', $api('#select').offset());
+        console.log('offset----', $api('#fixedbtn').offset());
+
+        $api('#setstyle').on('click', function(){
+            //设置CSS
+            $api('#content-test').css('color: red; border: 1px solid green;');
+            //获取CSS
+            console.log($api('#content-test').css('border'));
+            console.log($api('#content-test').css('font-size'));
+        });
+        
     </script>
 </html>
