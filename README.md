@@ -1,6 +1,6 @@
 #APICloud Frontend Framework
 
-APICloud 轻量级前端框架，包括 api.js 和 api.css。
+APICloud(http://www.apicloud.com) 轻量级前端框架，包括 api.js 和 api.css。
 
 我们提供了最基础的 api.css 和 api.js 前端框架，可与第三方前端框架混用，也可不用我们的框架；api.css 处理不同平台浏览器的默认样式，api.js 提供最基础的 JavaScript 方法，所有方法在 `window.$api` 对象下。
 
