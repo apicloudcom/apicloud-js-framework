@@ -1,17 +1,11 @@
 /*
  * APICloud JavaScript Library
- * Copyright (c) 2014 apicloud.com
+ * Copyright (c) 2018 apicloud.com
  */
 (function(window){
     var u = {};
     var isAndroid = (/android/gi).test(navigator.appVersion);
-    var uzStorage = function(){
-        var ls = window.localStorage;
-        if(isAndroid){
-           ls = os.localStorage();
-        }
-        return ls;
-    };
+	var uzStorage = isAndroid ? os.localStorage() : window.localStorage;
     function parseArguments(url, data, fnSuc, dataType) {
         if (typeof(data) == 'function') {
             dataType = fnSuc;
@@ -28,7 +22,10 @@
             fnSuc: fnSuc,
             dataType: dataType
         };
-    }
+    };
+	function _worn(fnstr){
+		console.warn('$api.' + fnstr + ' Function need el param, el param must be DOM Element');
+	};
     u.trim = function(str){
         if(String.prototype.trim){
             return str == null ? "" : String.prototype.trim.call(str);
@@ -57,7 +54,7 @@
     };
     u.addEvt = function(el, name, fn, useCapture){
         if(!u.isElement(el)){
-            console.warn('$api.addEvt Function need el param, el param must be DOM Element');
+            _worn('addEvt');
             return;
         }
         useCapture = useCapture || false;
@@ -67,7 +64,7 @@
     };
     u.rmEvt = function(el, name, fn, useCapture){
         if(!u.isElement(el)){
-            console.warn('$api.rmEvt Function need el param, el param must be DOM Element');
+            _worn('rmEvt');
             return;
         }
         useCapture = useCapture || false;
@@ -77,7 +74,7 @@
     };
     u.one = function(el, name, fn, useCapture){
         if(!u.isElement(el)){
-            console.warn('$api.one Function need el param, el param must be DOM Element');
+            _worn('one');
             return;
         }
         useCapture = useCapture || false;
@@ -116,7 +113,7 @@
     u.first = function(el, selector){
         if(arguments.length === 1){
             if(!u.isElement(el)){
-                console.warn('$api.first Function need el param, el param must be DOM Element');
+                _worn('first');
                 return;
             }
             return el.children[0];
@@ -128,7 +125,7 @@
     u.last = function(el, selector){
         if(arguments.length === 1){
             if(!u.isElement(el)){
-                console.warn('$api.last Function need el param, el param must be DOM Element');
+                _worn('last');
                 return;
             }
             var children = el.children;
@@ -146,7 +143,7 @@
     };
     u.prev = function(el){
         if(!u.isElement(el)){
-            console.warn('$api.prev Function need el param, el param must be DOM Element');
+            _worn('prev');
             return;
         }
         var node = el.previousSibling;
@@ -157,7 +154,7 @@
     };
     u.next = function(el){
         if(!u.isElement(el)){
-            console.warn('$api.next Function need el param, el param must be DOM Element');
+            _worn('next');
             return;
         }
         var node = el.nextSibling;
@@ -168,7 +165,7 @@
     };
     u.closest = function(el, selector){
         if(!u.isElement(el)){
-            console.warn('$api.closest Function need el param, el param must be DOM Element');
+            _worn('closest');
             return;
         }
         var doms, targetDom;
@@ -222,7 +219,7 @@
     };
     u.attr = function(el, name, value){
         if(!u.isElement(el)){
-            console.warn('$api.attr Function need el param, el param must be DOM Element');
+            _worn('attr');
             return;
         }
         if(arguments.length == 2){
@@ -234,7 +231,7 @@
     };
     u.removeAttr = function(el, name){
         if(!u.isElement(el)){
-            console.warn('$api.removeAttr Function need el param, el param must be DOM Element');
+            _worn('removeAttr');
             return;
         }
         if(arguments.length === 2){
@@ -243,21 +240,21 @@
     };
     u.hasCls = function(el, cls){
         if(!u.isElement(el)){
-            console.warn('$api.hasCls Function need el param, el param must be DOM Element');
+            _worn('hasCls');
             return;
         }
-        if(el.className.indexOf(cls) > -1){
-            return true;
+        if(el.classList){
+            return el.classList.contains(cls);
         }else{
-            return false;
+            return new RegExp('(^|\\s)' + cls + '(\\s|$)').test(el.className);
         }
     };
     u.addCls = function(el, cls){
         if(!u.isElement(el)){
-            console.warn('$api.addCls Function need el param, el param must be DOM Element');
+            _worn('addCls');
             return;
         }
-        if('classList' in el){
+        if(el.classList){
             el.classList.add(cls);
         }else{
             var preCls = el.className;
@@ -268,10 +265,10 @@
     };
     u.removeCls = function(el, cls){
         if(!u.isElement(el)){
-            console.warn('$api.removeCls Function need el param, el param must be DOM Element');
+            _worn('removeCls');
             return;
         }
-        if('classList' in el){
+        if(el.classList){
             el.classList.remove(cls);
         }else{
             var preCls = el.className;
@@ -282,10 +279,10 @@
     };
     u.toggleCls = function(el, cls){
         if(!u.isElement(el)){
-            console.warn('$api.toggleCls Function need el param, el param must be DOM Element');
+            _worn('toggleCls');
             return;
         }
-       if('classList' in el){
+       if(el.classList){
             el.classList.toggle(cls);
         }else{
             if(u.hasCls(el, cls)){
@@ -298,7 +295,7 @@
     };
     u.val = function(el, val){
         if(!u.isElement(el)){
-            console.warn('$api.val Function need el param, el param must be DOM Element');
+            _worn('val');
             return;
         }
         if(arguments.length === 1){
@@ -335,7 +332,7 @@
     };
     u.prepend = function(el, html){
         if(!u.isElement(el)){
-            console.warn('$api.prepend Function need el param, el param must be DOM Element');
+            _worn('prepend');
             return;
         }
         el.insertAdjacentHTML('afterbegin', html);
@@ -343,7 +340,7 @@
     };
     u.append = function(el, html){
         if(!u.isElement(el)){
-            console.warn('$api.append Function need el param, el param must be DOM Element');
+            _worn('append');
             return;
         }
         el.insertAdjacentHTML('beforeend', html);
@@ -351,7 +348,7 @@
     };
     u.before = function(el, html){
         if(!u.isElement(el)){
-            console.warn('$api.before Function need el param, el param must be DOM Element');
+            _worn('before');
             return;
         }
         el.insertAdjacentHTML('beforebegin', html);
@@ -359,7 +356,7 @@
     };
     u.after = function(el, html){
         if(!u.isElement(el)){
-            console.warn('$api.after Function need el param, el param must be DOM Element');
+            _worn('after');
             return;
         }
         el.insertAdjacentHTML('afterend', html);
@@ -367,7 +364,7 @@
     };
     u.html = function(el, html){
         if(!u.isElement(el)){
-            console.warn('$api.html Function need el param, el param must be DOM Element');
+            _worn('html');
             return;
         }
         if(arguments.length === 1){
@@ -379,7 +376,7 @@
     };
     u.text = function(el, txt){
         if(!u.isElement(el)){
-            console.warn('$api.text Function need el param, el param must be DOM Element');
+            _worn('text');
             return;
         }
         if(arguments.length === 1){
@@ -391,7 +388,7 @@
     };
     u.offset = function(el){
         if(!u.isElement(el)){
-            console.warn('$api.offset Function need el param, el param must be DOM Element');
+            _worn('offset');
             return;
         }
         var sl = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
@@ -407,7 +404,7 @@
     };
     u.css = function(el, css){
         if(!u.isElement(el)){
-            console.warn('$api.css Function need el param, el param must be DOM Element');
+            _worn('css');
             return;
         }
         if(typeof css == 'string' && css.indexOf(':') > 0){
@@ -416,7 +413,7 @@
     };
     u.cssVal = function(el, prop){
         if(!u.isElement(el)){
-            console.warn('$api.cssVal Function need el param, el param must be DOM Element');
+            _worn('cssVal');
             return;
         }
         if(arguments.length === 2){
@@ -443,16 +440,14 @@
             }else{
                 v = 'str-'+ v;
             }
-            var ls = uzStorage();
-            if(ls){
-                ls.setItem(key, v);
+            if(uzStorage){
+                uzStorage.setItem(key, v);
             }
         }
     };
     u.getStorage = function(key){
-        var ls = uzStorage();
-        if(ls){
-            var v = ls.getItem(key);
+        if(uzStorage){
+            var v = uzStorage.getItem(key);
             if(!v){return;}
             if(v.indexOf('obj-') === 0){
                 v = v.slice(4);
@@ -463,51 +458,36 @@
         }
     };
     u.rmStorage = function(key){
-        var ls = uzStorage();
-        if(ls && key){
-            ls.removeItem(key);
+        if(uzStorage && key){
+            uzStorage.removeItem(key);
         }
     };
     u.clearStorage = function(){
-        var ls = uzStorage();
-        if(ls){
-            ls.clear();
+        if(uzStorage){
+            uzStorage.clear();
         }
     };
-
-   
-    /*by king*/
     u.fixIos7Bar = function(el){
-        if(!u.isElement(el)){
-            console.warn('$api.fixIos7Bar Function need el param, el param must be DOM Element');
-            return;
-        }
-        var strDM = api.systemType;
-        if (strDM == 'ios') {
-            var strSV = api.systemVersion;
-            var numSV = parseInt(strSV,10);
-            var fullScreen = api.fullScreen;
-            var iOS7StatusBarAppearance = api.iOS7StatusBarAppearance;
-            if (numSV >= 7 && !fullScreen && iOS7StatusBarAppearance) {
-                el.style.paddingTop = '20px';
-            }
-        }
+		if(isAndroid){
+			return 0;
+		}
+        return u.fixStatusBar(el);
     };
     u.fixStatusBar = function(el){
         if(!u.isElement(el)){
-            console.warn('$api.fixStatusBar Function need el param, el param must be DOM Element');
-            return;
+            _worn('fixStatusBar');
+            return 0;
         }
-        var sysType = api.systemType;
-        if(sysType == 'ios'){
-            u.fixIos7Bar(el);
-        }else if(sysType == 'android'){
-            var ver = api.systemVersion;
-            ver = parseFloat(ver);
-            if(ver >= 4.4){
-                el.style.paddingTop = '25px';
-            }
+        el.style.paddingTop = api.safeArea.top + 'px';
+        return el.offsetHeight;
+    };
+    u.fixTabBar = function(el){
+        if(!u.isElement(el)){
+            _worn('fixTabBar');
+            return 0;
         }
+        el.style.paddingBottom = api.safeArea.bottom + 'px';
+        return el.offsetHeight;
     };
     u.toast = function(title, text, time){
         var opts = {};
