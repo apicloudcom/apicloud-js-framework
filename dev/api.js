@@ -206,7 +206,7 @@
                     mark = true;
                     return mark;
                 }
-            }while(el === document.body || el === document.documentElement);
+            }while(!(el === document.body || el === document.documentElement));
 
             return mark;
         }
